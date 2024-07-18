@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { PiUserCircle } from "react-icons/pi";
+import { AuthContext } from './AuthContext'; // Import AuthContext
 
 const CheckEmailPage = () => {
   const [data, setData] = useState({ email: "" });
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Destructure login from AuthContext
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -22,12 +24,13 @@ const CheckEmailPage = () => {
 
     try {
       const response = await axios.post(URL, data);
-
       toast.success(response.data.message);
 
       if (response.data.success) {
         setData({ email: "" });
-        navigate('/password', { state: response?.data?.data });
+        navigate('/password', {
+          state: response?.data?.data
+        });
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -55,13 +58,11 @@ const CheckEmailPage = () => {
               required
             />
           </div>
-          <button
-            className='bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide'
-          >
+          <button className='bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide'>
             Let's Go
           </button>
         </form>
-        <p className='my-3 text-center'>New User? <Link to={"/register"} className='hover:text-primary font-semibold'>Register</Link></p>
+        <p className='my-3 text-center'>New User ? <Link to={"/register"} className='hover:text-primary font-semibold'>Register</Link></p>
       </div>
     </div>
   );
